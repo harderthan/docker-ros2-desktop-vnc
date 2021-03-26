@@ -9,6 +9,7 @@ set -eu
 
 CHOOSE_ROS_DISTRO=foxy
 INSTALL_PACKAGE=desktop
+NAVIGATION2_WS_DIR=~/navigation_ws
 
 sudo apt-get update
 sudo apt-get install -y curl gnupg2 lsb-release
@@ -22,6 +23,14 @@ sudo apt-get install -y python3-rosdep python3-vcstool # https://index.ros.org/d
 sudo rosdep init
 rosdep update
 sudo apt-get install -y ros-${CHOOSE_ROS_DISTRO}-gazebo-ros-pkgs
+
+# For Navigation2 ros2
+sudo mkdir ${NAVIGATION2_WS_DIR}/src -p
+git clone https://github.com/ros-planning/navigation2.git ${NAVIGATION2_WS_DIR}/src
+cd ${NAVIGATION2_WS_DIR}
+rosdep install --from-path ./src -i -y
+colcon build 
+
 grep -F "source /opt/ros/${CHOOSE_ROS_DISTRO}/setup.bash" ~/.bashrc ||
 echo "source /opt/ros/${CHOOSE_ROS_DISTRO}/setup.bash" >> ~/.bashrc
 
